@@ -1,10 +1,5 @@
 import "./globals.scss";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Courage's Computer",
-  description: "The most sarcastic computer in Nowhere",
-};
+import style from "@/app/styles.module.scss";
 
 export default function RootLayout({
   children,
@@ -14,10 +9,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="retro-body">
-        <audio id="beep-sound" src="/sounds/beep.mp3" />
-        <audio id="error-sound" src="/sounds/error.mp3" />
-        <audio id="typing-sound" src="/sounds/typing.mp3" />
-        {children}
+        <div className={style.retro_box}>{children}</div>
       </body>
     </html>
   );
