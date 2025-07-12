@@ -1,0 +1,44 @@
+/* crt.css */
+
+.crt-container {
+  background-color: #0f0; /* green glow base */
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow:
+    0 0 2px #0f0,
+    0 0 8px #0f0,
+    inset 0 0 4px #0f0;
+  font-family: 'VT323', monospace;
+  transform: perspective(800px) scale(1.03) rotateX(1deg) rotateY(2deg);
+  filter: contrast(1.1) brightness(1.1) saturate(1.2);
+  border: 1px solid #0f0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Simulate CRT scanlines */
+.crt-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.1) 3px
+  );
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* General text styling */
+.text-crt {
+  color: #00ff88;
+  text-shadow:
+    0 0 1px #00ff88,
+    0 0 2px #00ff88;
+  letter-spacing: 0.03em;
+}

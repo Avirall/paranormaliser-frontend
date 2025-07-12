@@ -1,6 +1,6 @@
 .login_container {
   position: relative;
-  top: 10%;
+  top: -5%;
   color: #00ff00cc;
   font-family: "Courier New", Courier, monospace;
   padding: 4rem;
@@ -104,6 +104,46 @@
   transform: scale(0.96);
   box-shadow: 0 0 6px #00ff00;
 }
+
+.signup_container {
+  @extend .login_container;
+}
+
+.signup_form {
+  @extend .login_form;
+}
+
+.form_group {
+  @extend .form_group;
+}
+
+.signup_button {
+  @extend .login_button;
+}
+
+.button_container {
+  @extend .button_container;
+}
+
+.form_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.half_width {
+  flex: 1 1 45%;
+  min-width: 200px;
+}
+
+.button_row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
 
 .error_message {
   color: #ff4d4d;

@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import style from "./styles.module.scss";
 import { loginMessages } from "@/contants";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [message, setMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const router = useRouter();
   const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
@@ -76,11 +78,18 @@ export default function Login() {
           <span className={style.error_message}>{passwordError}</span>
         </div>
       </div>
+      <div className={style.inputfield}>
       <div className={style.button_container}>
         <button className={style.login_button} onClick={handleSubmit}>
           Login
         </button>
       </div>
+       <div className={style.button_container}>
+        <button className={style.login_button} onClick={()=>router.push('/signup')}>
+          Signup
+        </button>
+      </div>
+      </div>
     </div>
-  );
+    );
 }
