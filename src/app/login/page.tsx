@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import style from "./styles.module.scss";
 import { loginMessages } from "@/contants";
 import { useRouter } from "next/navigation";
+import { login } from "@/api";
 
 export default function Login() {
   const [message, setMessage] = useState("");
@@ -45,7 +46,14 @@ export default function Login() {
     }
 
     if (username && password) {
-      console.log("Logging in with", { username, password });
+      login(username, password)
+        .then((res) => {
+          if (res?.message === "Login successful") {
+          }
+        })
+        .catch((err) => {
+          console.log("Login failed:", err);
+        });
     }
   };
 
@@ -79,17 +87,20 @@ export default function Login() {
         </div>
       </div>
       <div className={style.inputfield}>
-      <div className={style.button_container}>
-        <button className={style.login_button} onClick={handleSubmit}>
-          Login
-        </button>
-      </div>
-       <div className={style.button_container}>
-        <button className={style.login_button} onClick={()=>router.push('/signup')}>
-          Signup
-        </button>
-      </div>
+        <div className={style.button_container}>
+          <button className={style.login_button} onClick={handleSubmit}>
+            Login
+          </button>
+        </div>
+        <div className={style.button_container}>
+          <button
+            className={style.login_button}
+            onClick={() => router.push("/signup")}
+          >
+            Signup
+          </button>
+        </div>
       </div>
     </div>
-    );
+  );
 }
