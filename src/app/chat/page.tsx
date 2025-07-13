@@ -17,7 +17,9 @@ export default function CRTTerminal() {
   const screenRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [responseLoading, setResponseLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<any>([]);
+  const [chatHistory, setChatHistory] = useState<
+    { user: string; ai: string }[]
+  >([]);
   const [displayedText, setDisplayedText] = useState("");
   const [startChat, setStartChat] = useState(false);
   const [chat, setChat] = useState<Chat | null>(null);
@@ -72,7 +74,7 @@ export default function CRTTerminal() {
 
   const get_or_setChat = async () => {
     if (!chat) {
-      const newChat = await get_response(message);
+      const newChat = await get_response();
       setChat(newChat);
       return newChat;
     }
@@ -108,9 +110,9 @@ export default function CRTTerminal() {
   };
 
   const handleChatSubmit = async () => {
-    let chat = await get_or_setChat();
-    let aiResponse: any = "";
-    let final_message = message;
+    const chat = await get_or_setChat();
+    let aiResponse: any = null;
+    const final_message = message;
     if (final_message && chat) {
       setResponse("");
       setDisplayedText("");
@@ -118,7 +120,7 @@ export default function CRTTerminal() {
       aiResponse = await chat.sendMessage({ message: final_message });
       setResponse(aiResponse.text);
 
-      setChatHistory((prev: any) => [
+      setChatHistory((prev) => [
         ...prev,
         { user: final_message, ai: aiResponse.text },
       ]);
@@ -134,24 +136,24 @@ export default function CRTTerminal() {
     }
   };
 
-  const handleUpload = () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.style.display = "none";
+  // const handleUpload = () => {
+  //   const fileInput = document.createElement("input");
+  //   fileInput.type = "file";
+  //   fileInput.accept = "image/*";
+  //   fileInput.style.display = "none";
 
-    fileInput.addEventListener("change", (e) => {
-      const target = e.target as HTMLInputElement;
-      const file = target.files?.[0];
-      if (file) {
-        console.log("File selected:", file.name);
-      }
-    });
+  //   fileInput.addEventListener("change", (e) => {
+  //     const target = e.target as HTMLInputElement;
+  //     const file = target.files?.[0];
+  //     if (file) {
+  //       console.log("File selected:", file.name);
+  //     }
+  //   });
 
-    document.body.appendChild(fileInput);
-    fileInput.click();
-    document.body.removeChild(fileInput);
-  };
+  //   document.body.appendChild(fileInput);
+  //   fileInput.click();
+  //   document.body.removeChild(fileInput);
+  // };
 
   const handleCourageClick = () => {
     const courageElement = document.querySelector(

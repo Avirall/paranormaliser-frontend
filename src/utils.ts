@@ -4,7 +4,7 @@ const ai = new GoogleGenAI({
   apiKey: "AIzaSyCN1zrhLQzTjZGwcVqZbTYmiwQYilhgCu8",
 });
 
-export async function get_response(prompt: string) {
+export async function get_response() {
   const chat = ai.chats.create({
     model: "gemini-2.5-flash",
     config: {
