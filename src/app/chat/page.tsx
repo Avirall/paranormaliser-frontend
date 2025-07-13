@@ -24,8 +24,11 @@ export default function CRTTerminal() {
 
   useEffect(() => {
     setDisplayedText("");
+
     if (!response) return;
+
     let index = 0;
+
     const interval = setInterval(() => {
       if (index <= response.length) {
         setDisplayedText(response.substring(0, index));
@@ -37,9 +40,15 @@ export default function CRTTerminal() {
 
     return () => clearInterval(interval);
   }, [response]);
+
   const router = useRouter();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = () => {
+        console.log("Voices loaded:", window.speechSynthesis.getVoices());
+      };
+    }
     if (window.localStorage.getItem("is_authenticated") === "true") {
       setLoading(false);
     } else {
@@ -78,17 +87,37 @@ export default function CRTTerminal() {
     setChatHistory([]);
     setStartChat(false);
     setChat(null);
+    window.speechSynthesis.cancel();
+  };
+
+  const speak = (text: string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.5;
+    utterance.pitch = 1.2;
+    utterance.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find((v) => v.name.includes("Zira"));
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleChatSubmit = async () => {
     let chat = await get_or_setChat();
+    let aiResponse: any = "";
     let final_message = message;
     if (final_message && chat) {
       setResponse("");
       setDisplayedText("");
       setResponseLoading(true);
-      let aiResponse: any = await chat.sendMessage({ message: final_message });
+      aiResponse = await chat.sendMessage({ message: final_message });
       setResponse(aiResponse.text);
+
       setChatHistory((prev: any) => [
         ...prev,
         { user: final_message, ai: aiResponse.text },
@@ -96,6 +125,7 @@ export default function CRTTerminal() {
       setMessage("");
     }
     setResponseLoading(false);
+    speak(aiResponse.text);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
