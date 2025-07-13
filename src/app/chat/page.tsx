@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
+
 export default function CRTTerminal() {
   const [message, setMessage] = useState("");
   const chatInputRef = useRef<HTMLInputElement>(null);
@@ -94,7 +95,7 @@ export default function CRTTerminal() {
             ▶
           </button>
         </div>
-        
+            
         <div className={styles.courageContainer}>
           <div className={styles.courage} onClick={handleCourageClick}></div>
         </div>
