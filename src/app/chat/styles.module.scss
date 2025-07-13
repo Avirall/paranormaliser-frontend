@@ -58,25 +58,30 @@ $darker-green: #000800;
   }
 }
 
+.chatInputBox {
+  position: relative;
+  width: 100%;
+  padding: 0.5rem;
+}
+
 .chat_container {
   position: absolute;
-  bottom: 6.5rem;
+  bottom: 1rem;
+  width: 98%;
   display: flex;
-  width: fit-content;
-  left: 20%;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   background-color: white;
   padding: 0.25rem;
 }
 
 .chatInputContainer {
+  width: 90%;
   > input {
+    width: 100%;
     padding: 0.5rem;
-    width: 50rem;
     outline: none;
     border: none;
     font-weight: bold;
@@ -237,4 +242,16 @@ $darker-green: #000800;
   100% {
     transform: translateX(0px) translateY(0px);
   }
+}
+
+.chatWindow {
+  display: flex;
+  padding: 5px;
+  height: 30rem;
+}
+
+.chatHistory {
+  width: 45%;
+  max-height: 30rem;
+  overflow-y: scroll;
 }

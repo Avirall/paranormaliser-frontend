@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import styles from "@/app/chat/styles.module.scss";
 import Loader from "@/components/Loader";
 import LogoutButton from "@/components/LogoutButton";
@@ -15,10 +16,14 @@ export default function CRTTerminal() {
   const [fullname, setFullname] = useState("");
   const screenRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
+  const [chatHistory, setChatHistory] = useState<any>([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (window.localStorage.getItem("is_authenticated") === "true") {
       setLoading(false);
+    } else {
+      router.push("/login");
     }
 
     const flickerInterval = setInterval(() => {
@@ -37,11 +42,19 @@ export default function CRTTerminal() {
   }, []);
 
   const handleChatSubmit = async () => {
-    setFinalMessage(message);
-    let aiResponse: string =
-      (await get_response(message)) || "No response from AI.";
-    setResponse(aiResponse);
-    setMessage("");
+    let final_message = message;
+    setFinalMessage(final_message);
+    if (final_message) {
+      let aiResponse: string =
+        (await get_response(message)) || "No response from AI.";
+      setResponse(aiResponse);
+      setChatHistory((prev: any) => [
+        ...prev,
+        { user: final_message, ai: aiResponse },
+      ]);
+      console.log(chatHistory);
+      setMessage("");
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -86,55 +99,62 @@ export default function CRTTerminal() {
   ) : (
     <div className={styles.mainContainer}>
       <LogoutButton />
-      <div className={styles.crtContainer}>
-        <div ref={screenRef} className={styles.screen}>
-          <div className={styles.static}></div>
+      <div className={styles.chatWindow}>
+        {chatHistory.length > 0 && (
+          <div className={styles.chatHistory}>
+            {chatHistory.map((chat: any, index: number) => (
+              <div key={index} className={styles.chatBubble}>
+                <div className={styles.userMessage}>{chat.user}</div>
+                <div className={styles.aiResponse}>{chat.ai}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className={styles.chatInputBox}>
+          <div className={styles.crtContainer}>
+            <div ref={screenRef} className={styles.screen}>
+              <div className={styles.static}></div>
 
-          {!finalMessage && (
-            <div className={styles.welcomeText}>
-              WELCOME BACK
-              <br />
-              {window.localStorage.getItem("fullname") || "Twit"} WHAT&apos;S
-              NEW?
-            </div>
-          )}
-        </div>
-      </div>
-      <div className={styles.Window}>
-        {finalMessage && (
-          <div className={styles.messageContainer}>
-            <div className={styles.messageText}>
-              {fullname} says: {finalMessage}
+              {!finalMessage && (
+                <div className={styles.welcomeText}>
+                  WELCOME BACK
+                  <br />
+                  {window.localStorage.getItem("fullname") || "Twit"}{" "}
+                  WHAT&apos;S NEW?
+                </div>
+              )}
             </div>
           </div>
-        )}
-        {response && (
-          <div className={styles.responseContainer}>
-            <div className={styles.responseText}>{response}</div>
+          <div className={styles.Window}>
+            {response && (
+              <div className={styles.responseContainer}>
+                <div className={styles.responseText}>{response}</div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div className={styles.chat_container}>
-        <div className={styles.chatInputContainer}>
-          <input
-            placeholder="Type your message here..."
-            value={message ?? ""}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
+          <div className={styles.chat_container}>
+            <div className={styles.chatInputContainer}>
+              <input
+                placeholder="Type your message here..."
+                value={message ?? ""}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+              />
+            </div>
+            <div className={styles.icons}>
+              <FaMicrophone color="black" />
+            </div>
+            <div className={styles.icons}>
+              <IoMdCloudUpload color="black" />
+            </div>
+            <div className={styles.icons}>
+              <IoSend color="black" onClick={handleChatSubmit} />
+            </div>
+          </div>
+          {/* <div className={styles.courageContainer}>
+            <div className={styles.courage} onClick={handleCourageClick}></div>
+          </div> */}
         </div>
-        <div className={styles.icons}>
-          <FaMicrophone color="black" />
-        </div>
-        <div className={styles.icons}>
-          <IoMdCloudUpload color="black" />
-        </div>
-        <div className={styles.icons}>
-          <IoSend color="black" onClick={handleChatSubmit} />
-        </div>
-      </div>
-      <div className={styles.courageContainer}>
-        <div className={styles.courage} onClick={handleCourageClick}></div>
       </div>
     </div>
   );
