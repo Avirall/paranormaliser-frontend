@@ -171,7 +171,15 @@ export default function CRTTerminal() {
     <Loader />
   ) : (
     <div className={styles.mainContainer}>
-      <LogoutButton />
+      <div className={styles.topBar}>
+  <LogoutButton />
+  {startChat && (
+    <button className={styles.newChatButton} onClick={newChat}>
+      Start new Chat
+    </button>
+  )}
+</div>
+
       <div className={styles.chatWindow}>
         {chatHistory.length > 0 && (
           <div className={styles.chatHistory}>
@@ -242,13 +250,7 @@ export default function CRTTerminal() {
             </div>
           )}
         </div>
-        {startChat && (
-          <div className={styles.chatFooter}>
-            <button className={styles.newChatButton} onClick={newChat}>
-              Start new Chat
-            </button>
-          </div>
-        )}
+       
         {!startChat && (
           <div className={styles.courageContainer}>
             <div className={styles.courage} onClick={handleCourageClick}></div>

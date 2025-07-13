@@ -361,19 +361,20 @@ $darker-green: #000800;
   display: flex;
   justify-content: center;
   align-items: center;
+}
   .newChatButton {
     background-color: #08552c;
-    color: #001500cc;
+    color: #b7f4b7cc;
     padding: 0.5rem 1rem;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     font-family: "Courier New", Courier, monospace;
     font-size: 1.2rem;
     text-decoration: none;
     text-align: center;
   }
-}
+
 
 .responseText::-webkit-scrollbar {
   width: 0.5rem;
