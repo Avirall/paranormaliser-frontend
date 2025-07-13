@@ -1,5 +1,6 @@
 import "./globals.scss";
 import style from "@/app/styles.module.scss";
+import Authenticate from "@/components/Authenticate";
 
 export default function RootLayout({
   children,
@@ -9,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="retro-body">
-        <div className={style.retro_box}>{children}</div>
+        <div className={style.retro_box}>
+          <Authenticate>{children}</Authenticate>
+        </div>
       </body>
     </html>
   );

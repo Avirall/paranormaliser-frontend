@@ -4,19 +4,27 @@ import style from "./styles.module.scss";
 import { loginMessages } from "@/contants";
 import { useRouter } from "next/navigation";
 import { login } from "@/api";
+import Loader from "@/components/Loader";
 
 export default function Login() {
   const [message, setMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const router = useRouter();
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const random =
       loginMessages[Math.floor(Math.random() * loginMessages.length)];
     setMessage(random);
+    const is_authenticated = window.localStorage.getItem("is_authenticated");
+    if (is_authenticated === "true") {
+      router.push("/chat");
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const handleInput = (
@@ -30,6 +38,32 @@ export default function Login() {
       setPassword(event?.target.value);
       setPasswordError("");
     }
+  };
+
+  const userLogin = (username: string, password: string) => {
+    login(username, password)
+      .then((res) => {
+        if (
+          res?.message === "Login successful" ||
+          res?.message === "User already logged in"
+        ) {
+          window.localStorage.setItem("username", username);
+          window.localStorage.setItem("fullname", res?.fullname || "");
+          window.localStorage.setItem("is_authenticated", "true");
+          router.push("/chat");
+        } else {
+          const errorMessage = res?.message || "Wrong username or password";
+          setPasswordError(errorMessage);
+        }
+      })
+      .catch((err) => {
+        console.log("Login failed:", err);
+        const errorMessage = "Login failed";
+        setPassword(errorMessage);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleSubmit = () => {
@@ -46,18 +80,13 @@ export default function Login() {
     }
 
     if (username && password) {
-      login(username, password)
-        .then((res) => {
-          if (res?.message === "Login successful") {
-          }
-        })
-        .catch((err) => {
-          console.log("Login failed:", err);
-        });
+      userLogin(username, password);
     }
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className={style.login_container}>
       <div className={style.message}>{message}</div>
       <div className={style.login_form}>
