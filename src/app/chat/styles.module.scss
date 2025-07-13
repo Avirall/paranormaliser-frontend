@@ -255,3 +255,68 @@ $darker-green: #000800;
   max-height: 30rem;
   overflow-y: scroll;
 }
+
+.loadingText {
+  color: #00ff00cc;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #00ff00;
+  width: fit-content;
+  position: relative;
+  top: 5rem;
+  margin: 0 auto;
+  animation: typing 1.5s steps(20) 1s 1 normal both,
+    blinkCursor 0.7s steps(1) infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 20ch;
+  }
+}
+
+@keyframes blinkCursor {
+  0% {
+    border-color: #00ff00;
+  }
+  50% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: #00ff00;
+  }
+}
+
+.responseText {
+  color: #00ff00cc;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.35rem;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+  top: 6rem;
+  white-space: pre-wrap;
+}
+
+.startChatButton {
+  position: absolute;
+  top: 16rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #08552c;
+  color: #001500cc;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.2rem;
+  text-decoration: none;
+  text-align: center;
+}

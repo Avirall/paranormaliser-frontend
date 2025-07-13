@@ -16,7 +16,21 @@ export default function CRTTerminal() {
   const [fullname, setFullname] = useState("");
   const screenRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
+  const [responseLoading, setResponseLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<any>([]);
+  const [displayedText, setDisplayedText] = useState("");
+  const [startChat, setStartChat] = useState(false);
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setDisplayedText((prev) => prev + response.charAt(index));
+      index++;
+      if (index >= response.length) clearInterval(interval);
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [response]);
   const router = useRouter();
 
   useEffect(() => {
@@ -45,6 +59,9 @@ export default function CRTTerminal() {
     let final_message = message;
     setFinalMessage(final_message);
     if (final_message) {
+      setResponse("");
+      setDisplayedText("");
+      setResponseLoading(true);
       let aiResponse: string =
         (await get_response(message)) || "No response from AI.";
       setResponse(aiResponse);
@@ -52,9 +69,9 @@ export default function CRTTerminal() {
         ...prev,
         { user: final_message, ai: aiResponse },
       ]);
-      console.log(chatHistory);
       setMessage("");
     }
+    setResponseLoading(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -115,46 +132,69 @@ export default function CRTTerminal() {
             <div ref={screenRef} className={styles.screen}>
               <div className={styles.static}></div>
 
-              {!finalMessage && (
+              {chatHistory.length === 0 && (
                 <div className={styles.welcomeText}>
-                  WELCOME BACK
+                  WELCOME BACK {fullname || "User"}!
                   <br />
-                  {window.localStorage.getItem("fullname") || "Twit"}{" "}
                   WHAT&apos;S NEW?
                 </div>
+              )}
+
+              {responseLoading && (
+                <div className={styles.loadingText}>LOADING RESPONSE...</div>
               )}
             </div>
           </div>
           <div className={styles.Window}>
-            {response && (
-              <div className={styles.responseContainer}>
-                <div className={styles.responseText}>{response}</div>
+            {displayedText && (
+              <div className={styles.responseText}>
+                {displayedText.split("\n").map((line, i) => (
+                  <div key={i}>{line}</div>
+                ))}
               </div>
             )}
           </div>
-          <div className={styles.chat_container}>
-            <div className={styles.chatInputContainer}>
-              <input
-                placeholder="Type your message here..."
-                value={message ?? ""}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyPress}
-              />
+          {!startChat && (
+            <div
+              className={styles.startChatButton}
+              onClick={() => setStartChat(true)}
+            >
+              START CHAT
             </div>
-            <div className={styles.icons}>
-              <FaMicrophone color="black" />
+          )}
+          {startChat && (
+            <div className={styles.chat_container}>
+              <div className={styles.chatInputContainer}>
+                <input
+                  placeholder="Type your message here..."
+                  value={message ?? ""}
+                  disabled={responseLoading}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                />
+              </div>
+              <div className={styles.icons}>
+                <FaMicrophone color="black" />
+              </div>
+              <div className={styles.icons}>
+                <IoMdCloudUpload color="black" />
+              </div>
+              <div className={styles.icons}>
+                <IoSend
+                  color="black"
+                  onClick={
+                    !responseLoading ? () => handleChatSubmit() : () => {}
+                  }
+                />
+              </div>
             </div>
-            <div className={styles.icons}>
-              <IoMdCloudUpload color="black" />
-            </div>
-            <div className={styles.icons}>
-              <IoSend color="black" onClick={handleChatSubmit} />
-            </div>
-          </div>
-          {/* <div className={styles.courageContainer}>
-            <div className={styles.courage} onClick={handleCourageClick}></div>
-          </div> */}
+          )}
         </div>
+        {!startChat && (
+          <div className={styles.courageContainer}>
+            <div className={styles.courage} onClick={handleCourageClick}></div>
+          </div>
+        )}
       </div>
     </div>
   );
