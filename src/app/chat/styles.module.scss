@@ -106,59 +106,22 @@ $darker-green: #000800;
 .courage {
   width: 60px;
   height: 60px;
-  background: $primary-green;
+  background-image: url('/mood%206.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   position: absolute;
   bottom: 10px;
   cursor: pointer;
-  clip-path: polygon(
-    20% 0%,
-    80% 0%,
-    90% 10%,
-    95% 25%,
-    95% 35%,
-    85% 45%,
-    90% 55%,
-    95% 65%,
-    95% 75%,
-    85% 85%,
-    75% 95%,
-    25% 95%,
-    15% 85%,
-    5% 75%,
-    5% 65%,
-    10% 55%,
-    15% 45%,
-    5% 35%,
-    5% 25%,
-    10% 10%
-  );
   filter: drop-shadow(0 0 10px $primary-green);
-  animation: courageRun 6s linear infinite,
-    couragebob 0.3s ease-in-out infinite alternate;
+  animation: courageRun 13s linear infinite, couragebob 0.3s ease-in-out infinite alternate;
 
-  // Dog ears
-  &::before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    width: 15px;
-    height: 20px;
-    background: $primary-green;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    transform: rotate(-20deg);
-  }
+  // Remove clip-path and ears
+  clip-path: none;
 
+  &::before,
   &::after {
-    content: "";
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    width: 15px;
-    height: 20px;
-    background: $primary-green;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    transform: rotate(20deg);
+    display: none;
   }
 
   &:hover {
@@ -171,7 +134,7 @@ $darker-green: #000800;
   }
 }
 
-// Courage animations
+ // Courage animations
 @keyframes courageRun {
   0% {
     left: 10px;
@@ -253,8 +216,71 @@ $darker-green: #000800;
 .chatHistory {
   width: 45%;
   max-height: 30rem;
-  overflow-y: scroll;
+  overflow-y: scroll; // 👈 Force scroll, even without overflow
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  font-family: "Courier New", Courier, monospace;
+  scrollbar-gutter: stable; // Optional: keeps layout from shifting when scrollbar appears
 }
+
+
+.messageBubble {
+  width: fit-content;
+  max-width: 90%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #00ff00;
+  word-wrap: break-word;
+  box-shadow: 0 0 0.2rem rgba(0, 255, 0, 0.3);
+}
+
+.userMessage {
+  align-self: flex-end;
+  text-align: right;
+  background-color: #003300;
+  color: #b7f1b7;
+  padding: 0.75rem 1rem;
+  max-width: 75%;
+  border-radius: 1rem 1rem 0 1rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
+  line-height: 1.4;
+  box-shadow: 0 0 4px #00ff00;
+  white-space: pre-wrap;
+}
+
+.aiResponse {
+  align-self: flex-start;
+  background-color: #001a00;
+  color: #00ff00;
+  padding: 0.75rem 1rem;
+  max-width: 75%;
+  border-radius: 1rem 1rem 1rem 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
+  line-height: 1.4;
+  box-shadow: 0 0 4px #00ff00;
+  white-space: pre-wrap;
+}
+
+.chatHistory::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.chatHistory::-webkit-scrollbar-thumb {
+  background-color: #00ff0044;
+  border-radius: 0.25rem;
+}
+
+.chatHistory::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
 
 .loadingText {
   color: #00ff00cc;
