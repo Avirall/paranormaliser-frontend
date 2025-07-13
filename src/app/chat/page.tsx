@@ -8,10 +8,10 @@ import { FaMicrophone } from "react-icons/fa6";
 import { IoMdCloudUpload } from "react-icons/io";
 import { IoSend } from "react-icons/io5";
 import { get_response } from "@/utils";
+import { Chat } from "@google/genai";
 
 export default function CRTTerminal() {
   const [message, setMessage] = useState("");
-  const [finalMessage, setFinalMessage] = useState("");
   const [response, setResponse] = useState("");
   const [fullname, setFullname] = useState("");
   const screenRef = useRef<HTMLDivElement>(null);
@@ -20,13 +20,19 @@ export default function CRTTerminal() {
   const [chatHistory, setChatHistory] = useState<any>([]);
   const [displayedText, setDisplayedText] = useState("");
   const [startChat, setStartChat] = useState(false);
+  const [chat, setChat] = useState<Chat | null>(null);
 
   useEffect(() => {
+    setDisplayedText("");
+    if (!response) return;
     let index = 0;
     const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + response.charAt(index));
-      index++;
-      if (index >= response.length) clearInterval(interval);
+      if (index <= response.length) {
+        setDisplayedText(response.substring(0, index));
+        index++;
+      } else {
+        clearInterval(interval);
+      }
     }, 30);
 
     return () => clearInterval(interval);
@@ -55,19 +61,37 @@ export default function CRTTerminal() {
     return () => clearInterval(flickerInterval);
   }, []);
 
+  const get_or_setChat = async () => {
+    if (!chat) {
+      const newChat = await get_response(message);
+      setChat(newChat);
+      return newChat;
+    }
+    return chat;
+  };
+
+  const newChat = async () => {
+    setMessage("");
+    setResponse("");
+    setDisplayedText("");
+    setResponseLoading(false);
+    setChatHistory([]);
+    setStartChat(false);
+    setChat(null);
+  };
+
   const handleChatSubmit = async () => {
+    let chat = await get_or_setChat();
     let final_message = message;
-    setFinalMessage(final_message);
-    if (final_message) {
+    if (final_message && chat) {
       setResponse("");
       setDisplayedText("");
       setResponseLoading(true);
-      let aiResponse: string =
-        (await get_response(message)) || "No response from AI.";
-      setResponse(aiResponse);
+      let aiResponse: any = await chat.sendMessage({ message: final_message });
+      setResponse(aiResponse.text);
       setChatHistory((prev: any) => [
         ...prev,
-        { user: final_message, ai: aiResponse },
+        { user: final_message, ai: aiResponse.text },
       ]);
       setMessage("");
     }
@@ -147,11 +171,7 @@ export default function CRTTerminal() {
           </div>
           <div className={styles.Window}>
             {displayedText && (
-              <div className={styles.responseText}>
-                {displayedText.split("\n").map((line, i) => (
-                  <div key={i}>{line}</div>
-                ))}
-              </div>
+              <div className={styles.responseText}>{displayedText}</div>
             )}
           </div>
           {!startChat && (
@@ -190,6 +210,13 @@ export default function CRTTerminal() {
             </div>
           )}
         </div>
+        {startChat && (
+          <div className={styles.chatFooter}>
+            <button className={styles.newChatButton} onClick={newChat}>
+              Start new Chat
+            </button>
+          </div>
+        )}
         {!startChat && (
           <div className={styles.courageContainer}>
             <div className={styles.courage} onClick={handleCourageClick}></div>
