@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="retro-body">
+      <body>
         <div className={style.retro_box}>
           <Authenticate>{children}</Authenticate>
         </div>

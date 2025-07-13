@@ -1,7 +1,5 @@
-import { exportPages } from "next/dist/export/worker";
-
 async function getCsrfToken() {
-  const res = await fetch("http://localhost:8000/csrf/", {
+  const res = await fetch("https://courage-computer.up.railway.app/csrf/", {
     credentials: "include",
   });
   const data = await res.json();
@@ -11,7 +9,7 @@ async function getCsrfToken() {
 export async function login(username: string, password: string) {
   const csrfToken = await getCsrfToken();
 
-  const res = await fetch("http://localhost:8000/login/", {
+  const res = await fetch("https://courage-computer.up.railway.app/login/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +27,7 @@ export async function login(username: string, password: string) {
 export async function signup(name: string, username: string, password: string) {
   const csrfToken = await getCsrfToken();
 
-  const res = await fetch("http://localhost:8000/signup/", {
+  const res = await fetch("https://courage-computer.up.railway.app/signup/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +45,7 @@ export async function signup(name: string, username: string, password: string) {
 export async function logout() {
   const csrfToken = await getCsrfToken();
 
-  const res = await fetch("http://localhost:8000/logout/", {
+  const res = await fetch("https://courage-computer.up.railway.app/logout/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
