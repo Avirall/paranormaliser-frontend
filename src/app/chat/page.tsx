@@ -1,18 +1,21 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import styles from "./styles.module.scss";
-
+import styles from "@/app/chat/styles.module.scss";
 import Loader from "@/components/Loader";
 import LogoutButton from "@/components/LogoutButton";
+import { FaMicrophone } from "react-icons/fa6";
+import { IoMdCloudUpload } from "react-icons/io";
+import { IoSend } from "react-icons/io5";
+import { get_response } from "@/utils";
 
 export default function CRTTerminal() {
   const [message, setMessage] = useState("");
+  const [finalMessage, setFinalMessage] = useState("");
+  const [response, setResponse] = useState("");
   const [fullname, setFullname] = useState("");
-  const chatInputRef = useRef<HTMLInputElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
-  // Random flicker effect
   useEffect(() => {
     if (window.localStorage.getItem("is_authenticated") === "true") {
       setLoading(false);
@@ -33,11 +36,12 @@ export default function CRTTerminal() {
     return () => clearInterval(flickerInterval);
   }, []);
 
-  const handleChatSubmit = () => {
-    if (message.trim()) {
-      console.log("Message sent:", message);
-      setMessage("");
-    }
+  const handleChatSubmit = async () => {
+    setFinalMessage(message);
+    let aiResponse: string =
+      (await get_response(message)) || "No response from AI.";
+    setResponse(aiResponse);
+    setMessage("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -77,40 +81,60 @@ export default function CRTTerminal() {
     }
   };
 
-  return (
-    <div className={styles.crtContainer}>
-      <div ref={screenRef} className={styles.screen}>
-        <div className={styles.static}></div>
+  return loading ? (
+    <Loader />
+  ) : (
+    <div className={styles.mainContainer}>
+      <LogoutButton />
+      <div className={styles.crtContainer}>
+        <div ref={screenRef} className={styles.screen}>
+          <div className={styles.static}></div>
 
-        <button className={styles.uploadBtn} onClick={handleUpload}>
-          📤 upload image
-        </button>
-
-        <div className={styles.welcomeText}>
-          WELCOME BACK
-          <br />
-          TWIT! WHAT&apos;S NEW?
+          {!finalMessage && (
+            <div className={styles.welcomeText}>
+              WELCOME BACK
+              <br />
+              {window.localStorage.getItem("fullname") || "Twit"} WHAT&apos;S
+              NEW?
+            </div>
+          )}
         </div>
-
-        <div className={styles.chatContainer}>
+      </div>
+      <div className={styles.Window}>
+        {finalMessage && (
+          <div className={styles.messageContainer}>
+            <div className={styles.messageText}>
+              {fullname} says: {finalMessage}
+            </div>
+          </div>
+        )}
+        {response && (
+          <div className={styles.responseContainer}>
+            <div className={styles.responseText}>{response}</div>
+          </div>
+        )}
+      </div>
+      <div className={styles.chat_container}>
+        <div className={styles.chatInputContainer}>
           <input
-            ref={chatInputRef}
-            type="text"
-            className={styles.chatInput}
-            placeholder="type to chat"
-            value={message}
+            placeholder="Type your message here..."
+            value={message ?? ""}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
           />
-          <span className={styles.micIcon}>🎤</span>
-          <button className={styles.sendBtn} onClick={handleChatSubmit}>
-            ▶
-          </button>
         </div>
-
-        <div className={styles.courageContainer}>
-          <div className={styles.courage} onClick={handleCourageClick}></div>
+        <div className={styles.icons}>
+          <FaMicrophone color="black" />
         </div>
+        <div className={styles.icons}>
+          <IoMdCloudUpload color="black" />
+        </div>
+        <div className={styles.icons}>
+          <IoSend color="black" onClick={handleChatSubmit} />
+        </div>
+      </div>
+      <div className={styles.courageContainer}>
+        <div className={styles.courage} onClick={handleCourageClick}></div>
       </div>
     </div>
   );

@@ -1,3 +1,8 @@
+.crtContainer {
+  position: relative;
+  top: 3rem;
+}
+
 .login_container {
   position: relative;
   top: 10%;
@@ -27,16 +32,13 @@ $primary-green: #00ff00;
 $dark-green: #002200;
 $darker-green: #000800;
 
-
 // Welcome text
 .welcomeText {
   color: $primary-green;
   font-size: 48px;
   text-align: center;
   margin-bottom: 40px;
-  text-shadow: 
-    0 0 10px $primary-green,
-    0 0 20px $primary-green,
+  text-shadow: 0 0 10px $primary-green, 0 0 20px $primary-green,
     0 0 30px $primary-green;
   letter-spacing: 3px;
   animation: textFlicker 2s infinite alternate;
@@ -47,81 +49,46 @@ $darker-green: #000800;
 }
 
 @keyframes textFlicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
-}
-
-// Chat container
-.chatContainer {
-  width: 80%;
-  max-width: 600px;
-  position: relative;
-  margin-bottom: 60px;
-
-  @media (max-width: 768px) {
-    width: 90%;
+  0%,
+  100% {
+    opacity: 1;
   }
-}
-
-.chatInput {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid $primary-green;
-  padding: 15px 50px 15px 20px;
-  font-family: 'VT323', monospace;
-  font-size: 20px;
-  color: #000;
-  outline: none;
-  box-shadow: 
-    0 0 20px rgba($primary-green, 0.5),
-    inset 0 0 10px rgba($primary-green, 0.1);
-  transition: all 0.3s ease;
-
-  &::placeholder {
-    color: #666;
+  50% {
     opacity: 0.8;
   }
+}
 
-  &:focus {
-    box-shadow: 0 0 30px rgba($primary-green, 0.8), 
-                inset 0 0 15px rgba($primary-green, 0.2);
-  }
+.chat_container {
+  position: absolute;
+  bottom: 6.5rem;
+  display: flex;
+  width: fit-content;
+  left: 20%;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 0.25rem;
+}
 
-  @media (max-width: 768px) {
-    font-size: 18px;
-    padding: 12px 50px 12px 15px;
+.chatInputContainer {
+  > input {
+    padding: 0.5rem;
+    width: 50rem;
+    outline: none;
+    border: none;
+    font-weight: bold;
+    font-family: "Courier New", Courier, monospace;
+    color: rgb(4, 50, 37);
   }
 }
 
-.sendBtn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: $primary-green;
-  font-size: 24px;
+.icons {
   cursor: pointer;
-  padding: 5px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    text-shadow: 0 0 10px $primary-green;
-    transform: translateY(-50%) scale(1.2);
-  }
 }
 
-.micIcon {
-  position: absolute;
-  right: 45px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #666;
-  font-size: 18px;
-}
-
-// Courage character
 .courageContainer {
   position: absolute;
   bottom: 20px;
@@ -139,19 +106,34 @@ $darker-green: #000800;
   bottom: 10px;
   cursor: pointer;
   clip-path: polygon(
-    20% 0%, 80% 0%, 90% 10%, 95% 25%, 95% 35%, 
-    85% 45%, 90% 55%, 95% 65%, 95% 75%, 85% 85%, 
-    75% 95%, 25% 95%, 15% 85%, 5% 75%, 5% 65%, 
-    10% 55%, 15% 45%, 5% 35%, 5% 25%, 10% 10%
+    20% 0%,
+    80% 0%,
+    90% 10%,
+    95% 25%,
+    95% 35%,
+    85% 45%,
+    90% 55%,
+    95% 65%,
+    95% 75%,
+    85% 85%,
+    75% 95%,
+    25% 95%,
+    15% 85%,
+    5% 75%,
+    5% 65%,
+    10% 55%,
+    15% 45%,
+    5% 35%,
+    5% 25%,
+    10% 10%
   );
   filter: drop-shadow(0 0 10px $primary-green);
-  animation: 
-    courageRun 6s linear infinite,
+  animation: courageRun 6s linear infinite,
     couragebob 0.3s ease-in-out infinite alternate;
 
   // Dog ears
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -10px;
     left: 10px;
@@ -163,7 +145,7 @@ $darker-green: #000800;
   }
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -10px;
     right: 10px;
@@ -176,10 +158,6 @@ $darker-green: #000800;
 
   &:hover {
     filter: drop-shadow(0 0 15px $primary-green);
-  }
-
-  .sendicon{
-    
   }
 
   @media (max-width: 768px) {
@@ -217,8 +195,12 @@ $darker-green: #000800;
 }
 
 @keyframes couragebob {
-  0% { bottom: 10px; }
-  100% { bottom: 15px; }
+  0% {
+    bottom: 10px;
+  }
+  100% {
+    bottom: 15px;
+  }
 }
 
 // Static effect
@@ -240,9 +222,19 @@ $darker-green: #000800;
 }
 
 @keyframes staticMove {
-  0% { transform: translateX(0px) translateY(0px); }
-  25% { transform: translateX(1px) translateY(-1px); }
-  50% { transform: translateX(-1px) translateY(1px); }
-  75% { transform: translateX(1px) translateY(1px); }
-  100% { transform: translateX(0px) translateY(0px); }
+  0% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(1px) translateY(-1px);
+  }
+  50% {
+    transform: translateX(-1px) translateY(1px);
+  }
+  75% {
+    transform: translateX(1px) translateY(1px);
+  }
+  100% {
+    transform: translateX(0px) translateY(0px);
+  }
 }
